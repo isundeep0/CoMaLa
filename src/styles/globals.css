@@ -1,0 +1,551 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+@import "highlight.js/styles/github-dark-dimmed.css";
+
+/* ─────────────────────────────────────────────────────────────────────
+   COMALA — Apple Liquid Fluid Glass · Dark Only
+   ───────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Base surfaces */
+  --bg: #0a0a0c;
+  --bg-deep: #050507;
+  --bg-surface: rgba(18, 18, 22, 0.72);
+  --bg-surface-solid: #121216;
+  --bg-surface-hover: rgba(28, 28, 34, 0.8);
+  --bg-elevated: rgba(32, 32, 40, 0.85);
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-bright: rgba(255, 255, 255, 0.12);
+  --border-dim: rgba(255, 255, 255, 0.04);
+
+  /* Text */
+  --text: #f0f0f5;
+  --text-muted: #8888a0;
+  --text-dim: #555568;
+
+  /* Accent — violet (matches Gateya primary) */
+  --accent: #7c6ef7;
+  --accent-hover: #9585ff;
+  --accent-glow: rgba(124, 110, 247, 0.15);
+  --accent-glow-strong: rgba(124, 110, 247, 0.35);
+
+  /* Status */
+  --success: #34d399;
+  --error: #f87171;
+  --warning: #fbbf24;
+
+  /* Radii */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+
+  /* Easing */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui,
+    sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas,
+    "Courier New", monospace;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius: var(--radius);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+  border-color: var(--border);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ambient gradient backdrop — the Apple Liquid Glass relies on a colourful
+   surface beneath translucent panels to read as "glass". */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(at 20% 10%, rgba(124, 110, 247, 0.18), transparent 50%),
+    radial-gradient(at 85% 20%, rgba(56, 189, 248, 0.10), transparent 45%),
+    radial-gradient(at 75% 90%, rgba(236, 72, 153, 0.10), transparent 55%),
+    radial-gradient(at 10% 85%, rgba(34, 197, 94, 0.08), transparent 50%),
+    var(--bg-deep);
+  pointer-events: none;
+}
+
+button,
+a,
+[role="button"] {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Glass layers ─────────────────────────────────────────────────── */
+
+.glass-panel {
+  background: rgba(16, 16, 20, 0.72);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-sidebar {
+  background: rgba(12, 12, 14, 0.72);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-right: 1px solid var(--border);
+}
+
+.glass-toolbar {
+  background: rgba(14, 14, 18, 0.65);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border-bottom: 1px solid var(--border);
+}
+
+.glass-statusbar {
+  background: rgba(10, 10, 14, 0.7);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border-top: 1px solid var(--border);
+}
+
+.glass-editor {
+  background: rgba(10, 10, 14, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-modal {
+  background: rgba(18, 18, 24, 0.85);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
+  border: 1px solid var(--border-bright);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-input {
+  background: rgba(17, 17, 19, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.glass-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Apple-style top-edge light leak */
+.fluid-highlight {
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Multi-layered depth shadow */
+.fluid-shadow {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 24px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* Diagonal shimmer overlay (Gateya port) */
+.fluid-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.fluid-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 60%
+  );
+}
+
+.fluid-glow-hover {
+  transition: box-shadow 0.3s var(--ease), transform 0.2s var(--ease);
+}
+.fluid-glow-hover:hover {
+  box-shadow: 0 0 24px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+/* ── Glass buttons ────────────────────────────────────────────────── */
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 13px;
+  transition: all 0.15s var(--ease);
+}
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.glass-btn:active {
+  transform: scale(0.97);
+}
+.glass-btn.active,
+.glass-btn[data-active="true"] {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+.glass-btn-icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+
+.accent-btn {
+  background: linear-gradient(135deg, var(--accent), #6d5cf3);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 16px var(--accent-glow);
+}
+.accent-btn:hover {
+  background: linear-gradient(135deg, var(--accent-hover), #7c6ef7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 6px 24px var(--accent-glow-strong);
+}
+
+/* ── Animations ───────────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 12px var(--accent-glow); }
+  50% { box-shadow: 0 0 24px var(--accent-glow-strong); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s var(--ease) forwards;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ── KaTeX overrides ──────────────────────────────────────────────── */
+
+.katex {
+  font-size: 1.05em !important;
+  color: var(--text) !important;
+}
+.katex-display {
+  margin: 1.5rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
+/* ── Markdown article ─────────────────────────────────────────────── */
+
+.article {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text);
+}
+.article h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  letter-spacing: -0.02em;
+}
+.article h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+}
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1rem 0 0.4rem;
+}
+.article p {
+  margin: 0.75rem 0;
+}
+.article a {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-glow);
+  text-underline-offset: 2px;
+}
+.article a:hover {
+  text-decoration-color: var(--accent);
+}
+.article ul,
+.article ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+.article li {
+  margin: 0.3rem 0;
+}
+.article blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-glow);
+  border-radius: 0 8px 8px 0;
+  color: var(--text);
+  font-style: italic;
+}
+.article hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.article code:not(pre code) {
+  background: rgba(124, 110, 247, 0.12);
+  color: var(--accent-hover);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+  font-family: var(--font-mono);
+}
+.article pre {
+  position: relative;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+.article pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--text);
+}
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 14px;
+}
+.article th,
+.article td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.article th {
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 600;
+}
+.article img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+}
+.article ul li input[type="checkbox"] {
+  margin-right: 0.4rem;
+  accent-color: var(--accent);
+}
+
+/* Mermaid diagrams */
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── CodeMirror theme tweaks ──────────────────────────────────────── */
+
+.cm-editor {
+  background: transparent !important;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+.cm-scroller {
+  font-family: var(--font-mono) !important;
+  line-height: 1.7;
+}
+.cm-content {
+  padding: 16px 0;
+  caret-color: var(--accent) !important;
+}
+.cm-gutters {
+  background: transparent !important;
+  border-right: 1px solid var(--border) !important;
+  color: var(--text-dim) !important;
+}
+.cm-activeLineGutter {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--text-muted) !important;
+}
+.cm-activeLine {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+.cm-selectionBackground,
+.cm-content ::selection {
+  background: rgba(124, 110, 247, 0.25) !important;
+}
+.cm-cursor {
+  border-left-color: var(--accent) !important;
+  border-left-width: 2px !important;
+}
+.cm-tooltip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-bright) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(20px);
+}
+.cm-panels {
+  background: rgba(14, 14, 18, 0.85) !important;
+  backdrop-filter: blur(20px);
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.cm-panel input,
+.cm-panel button {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+}
+
+/* Markdown syntax colors in CM6 */
+.cm-line .cm-header { color: #c4b5fd; font-weight: 700; }
+.cm-line .cm-strong { color: #fde68a; font-weight: 700; }
+.cm-line .cm-emphasis { color: #fbcfe8; font-style: italic; }
+.cm-line .cm-link { color: #93c5fd; }
+.cm-line .cm-url { color: #6ee7b7; }
+.cm-line .cm-quote { color: var(--text-muted); font-style: italic; }
+.cm-line .cm-monospace,
+.cm-line .cm-inline-code { color: #f9a8d4; }
+
+/* Resizer handle */
+.resize-handle {
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s var(--ease);
+}
+.resize-handle:hover,
+.resize-handle.dragging {
+  background: var(--accent-glow);
+}

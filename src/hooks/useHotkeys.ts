@@ -1,0 +1,56 @@
+import { useEffect } from "react";
+import { useEditorStore } from "@/store/useEditorStore";
+import { manualSave } from "./useAutoSave";
+
+interface Handlers {
+  onNewNote: () => void;
+  onOpenFile: () => void;
+  onOpenSettings: () => void;
+  onToggleSidebar: () => void;
+  onFind: () => void;
+  onExport: () => void;
+}
+
+export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport }: Handlers) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const ctrl = e.ctrlKey || e.metaKey;
+      if (!ctrl) return;
+      const k = e.key.toLowerCase();
+
+      if (k === "s" && !e.shiftKey) {
+        e.preventDefault();
+        manualSave();
+      } else if (k === "n") {
+        e.preventDefault();
+        onNewNote();
+      } else if (k === "o") {
+        e.preventDefault();
+        onOpenFile();
+      } else if (k === ",") {
+        e.preventDefault();
+        onOpenSettings();
+      } else if (k === "\\") {
+        e.preventDefault();
+        onToggleSidebar();
+      } else if (k === "f" && !e.shiftKey) {
+        e.preventDefault();
+        onFind();
+      } else if (e.shiftKey && k === "x") {
+        e.preventDefault();
+        onExport();
+      } else if (e.shiftKey && k === "e") {
+        e.preventDefault();
+        useEditorStore.getState().setViewMode("editor");
+      } else if (e.shiftKey && k === "p") {
+        e.preventDefault();
+        useEditorStore.getState().setViewMode("preview");
+      } else if (e.shiftKey && k === "b") {
+        e.preventDefault();
+        useEditorStore.getState().setViewMode("split");
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport]);
+}
