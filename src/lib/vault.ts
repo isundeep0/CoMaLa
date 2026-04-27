@@ -254,6 +254,10 @@ export async function deleteNote(path: string): Promise<void> {
   await remove(path);
 }
 
+export async function deleteFolder(path: string): Promise<void> {
+  await remove(path, { recursive: true });
+}
+
 export async function renameNote(oldPath: string, newName: string): Promise<string> {
   const dir = oldPath.substring(0, oldPath.lastIndexOf("/")) || oldPath.substring(0, oldPath.lastIndexOf("\\"));
   let safe = slugifyFilename(newName);

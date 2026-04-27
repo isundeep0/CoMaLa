@@ -305,6 +305,10 @@ a,
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 @keyframes shimmer-sweep {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
@@ -316,6 +320,9 @@ a,
 
 .animate-fade-in {
   animation: fade-in 0.3s var(--ease) forwards;
+}
+.animate-scale-in {
+  animation: scale-in 0.2s var(--ease) forwards;
 }
 .animate-pulse-glow {
   animation: pulse-glow 2.5s ease-in-out infinite;
@@ -548,4 +555,81 @@ a,
 .resize-handle:hover,
 .resize-handle.dragging {
   background: var(--accent-glow);
+}
+
+/* ── Custom Title Bar ─────────────────────────────────────────────── */
+
+.titlebar {
+  height: 36px;
+  min-height: 36px;
+  background: rgba(8, 8, 12, 0.85);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: inset 0 -0.5px 0 rgba(255, 255, 255, 0.04);
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.titlebar button,
+.titlebar .traffic-lights {
+  -webkit-app-region: no-drag;
+}
+
+/* macOS-style traffic light buttons */
+.traffic-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s var(--ease);
+  cursor: pointer;
+  position: relative;
+}
+
+.traffic-btn .traffic-icon {
+  opacity: 0;
+  transition: opacity 0.15s var(--ease);
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.traffic-lights:hover .traffic-icon {
+  opacity: 1;
+}
+
+.traffic-red {
+  background: #ff5f57;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.traffic-red:hover {
+  background: #ff3b30;
+}
+
+.traffic-yellow {
+  background: #febc2e;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.traffic-yellow:hover {
+  background: #f5a623;
+}
+
+.traffic-green {
+  background: #28c840;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.traffic-green:hover {
+  background: #1db938;
+}
+
+/* Unfocused state — all grey */
+.titlebar:not(:hover) .traffic-btn:not(:hover) {
+  /* keep colored even when not hovered */
+}
+
+.traffic-btn:active {
+  filter: brightness(0.85);
+  transform: scale(0.92);
 }

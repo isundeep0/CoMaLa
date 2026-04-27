@@ -151,7 +151,7 @@ interface TreeNodeProps {
   onStartRename: (id: string, name: string) => void;
   onCommitRename: (oldPath: string) => void;
   onCancelRename: () => void;
-  onDeleteTarget: (t: { path: string; name: string }) => void;
+  onDeleteTarget: (t: { path: string; name: string; isFolder?: boolean }) => void;
 }
 
 function RecursiveTreeNode({
@@ -202,6 +202,16 @@ function RecursiveTreeNode({
             title="New note here"
           >
             <FilePlus size={12} />
+          </span>
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteTarget({ path: node.path, name: node.name, isFolder: true });
+            }}
+            className="opacity-0 group-hover:opacity-100 hover:text-[var(--error)] transition-opacity cursor-pointer"
+            title="Delete folder"
+          >
+            <Trash2 size={12} />
           </span>
         </button>
         {isOpen && (
@@ -318,7 +328,7 @@ function RecursiveTreeNode({
 }
 
 const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettings, onPickVault }, ref) {
-  const { notebooks, tree, vaultPath, loading, createNotebook, createNote, deleteNote, renameNote } =
+  const { notebooks, tree, vaultPath, loading, createNotebook, createNote, deleteNote, deleteFolder, renameNote } =
     useVaultStore();
   const { openNote, activeNoteId } = useEditorStore();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -332,7 +342,7 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
   const [creatingNoteIn, setCreatingNoteIn] = useState<string | null>(null); // notebookPath or null
 
   // Delete confirmation
-  const [deleteTarget, setDeleteTarget] = useState<{ path: string; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ path: string; name: string; isFolder?: boolean } | null>(null);
 
   useEffect(() => {
     // Auto-expand top-level directories
@@ -430,18 +440,27 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
   }, [tree, notebooks, expanded]);
 
   const handleDelete = useCallback(
-    async (path: string) => {
+    async (path: string, isFolder?: boolean) => {
       setDeleteTarget(null);
       try {
-        await deleteNote(path);
-        if (useEditorStore.getState().activeNoteId === path) {
-          useEditorStore.getState().closeNote();
+        if (isFolder) {
+          await deleteFolder(path);
+          // If the active note was inside this folder, close it
+          const activeId = useEditorStore.getState().activeNoteId;
+          if (activeId && activeId.replace(/\\/g, "/").startsWith(path.replace(/\\/g, "/"))) {
+            useEditorStore.getState().closeNote();
+          }
+        } else {
+          await deleteNote(path);
+          if (useEditorStore.getState().activeNoteId === path) {
+            useEditorStore.getState().closeNote();
+          }
         }
       } catch (e) {
-        console.error("failed to delete note", e);
+        console.error("failed to delete", e);
       }
     },
-    [deleteNote],
+    [deleteNote, deleteFolder],
   );
 
   useImperativeHandle(ref, () => ({
@@ -610,9 +629,11 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
       <ConfirmDialog
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
-        onConfirm={() => deleteTarget && handleDelete(deleteTarget.path)}
-        title="Delete note"
-        message={`Delete "${deleteTarget?.name}"? This cannot be undone.`}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget.path, deleteTarget.isFolder)}
+        title={deleteTarget?.isFolder ? "Delete folder" : "Delete note"}
+        message={deleteTarget?.isFolder
+          ? `Delete folder "${deleteTarget?.name}" and all its contents? This cannot be undone.`
+          : `Delete "${deleteTarget?.name}"? This cannot be undone.`}
         confirmLabel="Delete"
         danger
       />

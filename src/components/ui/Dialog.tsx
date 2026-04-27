@@ -6,9 +6,10 @@ interface DialogProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  wide?: boolean;
 }
 
-export function Dialog({ open, onClose, title, children }: DialogProps) {
+export function Dialog({ open, onClose, title, children, wide }: DialogProps) {
   const backdropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export function Dialog({ open, onClose, title, children }: DialogProps) {
         if (e.target === backdropRef.current) onClose();
       }}
     >
-      <div className="glass-modal rounded-xl p-5 min-w-[320px] max-w-md shadow-xl animate-scale-in">
+      <div className={`glass-modal rounded-xl p-5 min-w-[320px] shadow-xl animate-scale-in ${wide ? "max-w-2xl w-full" : "max-w-md"}`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[14px] font-semibold">{title}</h3>
           <button onClick={onClose} className="glass-btn glass-btn-icon">

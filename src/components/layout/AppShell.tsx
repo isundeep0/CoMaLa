@@ -10,13 +10,16 @@ import {
   Download,
   Search,
   FilePlus,
+  HelpCircle,
 } from "lucide-react";
 import Sidebar, { type SidebarHandle } from "@/components/sidebar/Sidebar";
 import EditorPane from "@/components/editor/EditorPane";
 import PreviewPane from "@/components/preview/PreviewPane";
 import Toolbar from "@/components/editor/Toolbar";
 import StatusBar from "@/components/layout/StatusBar";
+import TitleBar from "@/components/layout/TitleBar";
 import SettingsModal from "@/components/settings/SettingsModal";
+import HelpModal from "@/components/help/HelpModal";
 import WelcomeScreen from "@/components/welcome/WelcomeScreen";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useVaultStore } from "@/store/useVaultStore";
@@ -31,6 +34,7 @@ import { cn } from "@/lib/utils";
 export default function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const editorViewRef = useRef<EditorView | null>(null);
   const sidebarRef = useRef<SidebarHandle>(null);
 
@@ -103,6 +107,7 @@ export default function AppShell() {
       if (editorViewRef.current) openSearchPanel(editorViewRef.current);
     },
     onExport: () => handleExport(),
+    onHelp: () => setHelpOpen(true),
   });
 
   const handleExport = useCallback(async () => {
@@ -136,14 +141,24 @@ export default function AppShell() {
 
   if (!settings.hydrated) {
     return (
-      <div className="h-full flex items-center justify-center text-[var(--text-muted)] text-sm">
-        Loading…
+      <div className="h-full flex flex-col">
+        <TitleBar />
+        <div className="flex-1 flex items-center justify-center text-[var(--text-muted)] text-sm">
+          Loading…
+        </div>
       </div>
     );
   }
 
   if (!settings.vaultPath) {
-    return <WelcomeScreen onPickVault={handlePickVault} onOpenSettings={() => setSettingsOpen(true)} onOpenRecent={handleOpenRecent} />;
+    return (
+      <div className="h-full flex flex-col">
+        <TitleBar />
+        <div className="flex-1 min-h-0">
+          <WelcomeScreen onPickVault={handlePickVault} onOpenSettings={() => setSettingsOpen(true)} onOpenRecent={handleOpenRecent} />
+        </div>
+      </div>
+    );
   }
 
   const showEditor = viewMode !== "preview";
@@ -151,7 +166,9 @@ export default function AppShell() {
   const splitRatio = settings.editorPaneRatio;
 
   return (
-    <div className="h-full w-full flex overflow-hidden">
+    <div className="h-full w-full flex flex-col overflow-hidden">
+      <TitleBar />
+      <div className="flex-1 min-h-0 flex overflow-hidden">
       {/* Sidebar */}
       <div
         className={cn(
@@ -240,6 +257,14 @@ export default function AppShell() {
             >
               <Eye size={13} />
             </button>
+            <span className="w-px h-5 bg-white/8 mx-1" />
+            <button
+              onClick={() => setHelpOpen(true)}
+              className="glass-btn glass-btn-icon"
+              title="Help (F1)"
+            >
+              <HelpCircle size={13} />
+            </button>
           </div>
         </div>
 
@@ -306,6 +331,7 @@ export default function AppShell() {
 
         <StatusBar />
       </div>
+      </div>
 
       <SettingsModal
         open={settingsOpen}
@@ -315,6 +341,7 @@ export default function AppShell() {
           setVaultPath(p);
         }}
       />
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

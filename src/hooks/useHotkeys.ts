@@ -9,11 +9,19 @@ interface Handlers {
   onToggleSidebar: () => void;
   onFind: () => void;
   onExport: () => void;
+  onHelp?: () => void;
 }
 
-export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport }: Handlers) {
+export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport, onHelp }: Handlers) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // F1 for help (no modifier needed)
+      if (e.key === "F1") {
+        e.preventDefault();
+        onHelp?.();
+        return;
+      }
+
       const ctrl = e.ctrlKey || e.metaKey;
       if (!ctrl) return;
       const k = e.key.toLowerCase();
@@ -52,5 +60,5 @@ export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSide
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport]);
+  }, [onNewNote, onOpenFile, onOpenSettings, onToggleSidebar, onFind, onExport, onHelp]);
 }

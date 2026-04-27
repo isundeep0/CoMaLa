@@ -6,6 +6,7 @@ import {
   createNotebook as fsCreateNotebook,
   createNote as fsCreateNote,
   deleteNote as fsDeleteNote,
+  deleteFolder as fsDeleteFolder,
   renameNote as fsRenameNote,
 } from "@/lib/vault";
 
@@ -20,6 +21,7 @@ interface VaultState {
   createNotebook: (name: string) => Promise<Notebook | null>;
   createNote: (notebookPath: string, name: string) => Promise<NoteFile | null>;
   deleteNote: (path: string) => Promise<void>;
+  deleteFolder: (path: string) => Promise<void>;
   renameNote: (oldPath: string, newName: string) => Promise<string | null>;
 }
 
@@ -85,6 +87,11 @@ export const useVaultStore = create<VaultState>((set, get) => ({
 
   deleteNote: async (path) => {
     await fsDeleteNote(path);
+    await get().reload();
+  },
+
+  deleteFolder: async (path) => {
+    await fsDeleteFolder(path);
     await get().reload();
   },
 
