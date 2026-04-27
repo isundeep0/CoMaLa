@@ -325,6 +325,7 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
+  const [editingName, setEditingName] = useState("");
 
   // Inline creation states
   const [creatingNotebook, setCreatingNotebook] = useState(false);
@@ -424,7 +425,7 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
     const target = expandedDirs[0] || dirs[0] || notebooks[0];
     if (target) {
       setCreatingNoteIn(target.path);
-      setExpanded((prev) => new Set([...prev, target.id ?? target.path]));
+      setExpanded((prev) => new Set([...prev, target.path]));
     }
   }, [tree, notebooks, expanded]);
 
@@ -451,17 +452,23 @@ const Sidebar = forwardRef<SidebarHandle, Props>(function Sidebar({ onOpenSettin
   const startRename = (id: string, name: string) => {
     setEditingId(id);
     setEditValue(name);
+    setEditingName(name);
   };
 
   const commitRename = async (oldPath: string) => {
-    if (editValue.trim() && editValue !== editingId) {
+    if (editValue.trim() && editValue !== editingName) {
       try {
-        await renameNote(oldPath, editValue);
+        const newPath = await renameNote(oldPath, editValue);
+        if (newPath && useEditorStore.getState().activeNoteId === oldPath) {
+          const content = useEditorStore.getState().content;
+          useEditorStore.getState().openNote(newPath, newPath, editValue.trim(), content);
+        }
       } catch (e) {
         console.error("failed to rename note", e);
       }
     }
     setEditingId(null);
+    setEditingName("");
   };
 
   return (
