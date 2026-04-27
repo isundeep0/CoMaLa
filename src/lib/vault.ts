@@ -41,7 +41,8 @@ const SETTINGS_FILE = "settings.json";
 function joinPath(...parts: string[]): string {
   return parts
     .filter(Boolean)
-    .map((p) => p.replace(/[\\/]+$/, ""))
+    .map((p, i) => (i === 0 ? p.replace(/[\\/]+$/, "") : p.replace(/^[\\/]+|[\\/]+$/g, "")))
+    .filter(Boolean)
     .join("/")
     .replace(/\\/g, "/");
 }
