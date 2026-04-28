@@ -16,6 +16,7 @@ import Sidebar, { type SidebarHandle } from "@/components/sidebar/Sidebar";
 import EditorPane from "@/components/editor/EditorPane";
 import PreviewPane from "@/components/preview/PreviewPane";
 import Toolbar from "@/components/editor/Toolbar";
+import TabBar from "@/components/editor/TabBar";
 import StatusBar from "@/components/layout/StatusBar";
 import TitleBar from "@/components/layout/TitleBar";
 import SettingsModal from "@/components/settings/SettingsModal";
@@ -40,7 +41,7 @@ export default function AppShell() {
 
   const settings = useSettingsStore();
   const { vaultPath, setVaultPath, reload } = useVaultStore();
-  const { activeNoteId, viewMode, setViewMode, openNote, saveStatus, activeName } = useEditorStore();
+  const { activeNoteId, viewMode, setViewMode, openNote, saveStatus, activeName, newTab } = useEditorStore();
 
   // Hydrate settings on mount
   useEffect(() => {
@@ -79,10 +80,8 @@ export default function AppShell() {
   }, [settings, setVaultPath]);
 
   const handleNewNote = useCallback(() => {
-    setSidebarOpen(true);
-    // Small delay so sidebar mounts before we trigger inline creation
-    setTimeout(() => sidebarRef.current?.startCreateNote(), 50);
-  }, []);
+    newTab();
+  }, [newTab]);
 
   const handleOpenRecent = useCallback(async (path: string) => {
     const normalized = normalizePath(path);
@@ -270,6 +269,9 @@ export default function AppShell() {
 
         {/* Toolbar (only when editor visible) */}
         {showEditor && <Toolbar view={editorViewRef.current} />}
+
+        {/* Tab bar */}
+        <TabBar />
 
         {/* Editor + Preview */}
         <div className="flex-1 flex overflow-hidden min-h-0">

@@ -3,8 +3,8 @@
 # The installer will be at: src-tauri\target\release\bundle\nsis\COMALA_0.1.0_x64-setup.exe
 
 # Ensure Rust doesn't crash on heavy proc-macro crates (windows-sys)
-$env:RUST_MIN_STACK = "67108864"
-$env:CARGO_BUILD_JOBS = "2"
+$env:RUST_MIN_STACK = "134217728"
+$env:CARGO_BUILD_JOBS = "1"
 
 Write-Host "`n=== Building Comala ===" -ForegroundColor Cyan
 Write-Host ""

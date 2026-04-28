@@ -560,15 +560,14 @@ a,
 /* ── Custom Title Bar ─────────────────────────────────────────────── */
 
 .titlebar {
-  height: 36px;
-  min-height: 36px;
-  background: rgba(8, 8, 12, 0.85);
+  height: 28px;
+  min-height: 28px;
+  background: rgba(8, 8, 12, 0.92);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-bottom: 1px solid var(--border);
   box-shadow: inset 0 -0.5px 0 rgba(255, 255, 255, 0.04);
   user-select: none;
-  -webkit-app-region: drag;
 }
 
 .titlebar button,
@@ -576,60 +575,125 @@ a,
   -webkit-app-region: no-drag;
 }
 
-/* macOS-style traffic light buttons */
-.traffic-btn {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
+/* Windows-style window control buttons */
+.window-btn {
+  width: 36px;
+  height: 28px;
   border: none;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s var(--ease);
+  color: var(--text-muted);
+  transition: background 0.1s, color 0.1s;
   cursor: pointer;
   position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+.window-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+.window-btn:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+.window-btn-close:hover {
+  background: #e81123;
+  color: white;
+}
+.window-btn-close:active {
+  background: #c50f1f;
+  color: white;
 }
 
-.traffic-btn .traffic-icon {
+/* ── Tab Bar ──────────────────────────────────────────────────────── */
+
+.tab-bar {
+  height: 32px;
+  min-height: 32px;
+  background: rgba(10, 10, 14, 0.7);
+  border-bottom: 1px solid var(--border);
+  padding-left: 4px;
+  gap: 0;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px 0 12px;
+  height: 100%;
+  min-width: 80px;
+  max-width: 180px;
+  font-size: 11px;
+  color: var(--text-dim);
+  border-right: 1px solid var(--border-dim);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  position: relative;
+  user-select: none;
+}
+.tab-item:hover {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+.tab-item.active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tab-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.tab-unsaved-badge {
+  color: var(--text-dim);
+  margin-left: 2px;
+  font-size: 8px;
+}
+
+.tab-close-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
   opacity: 0;
-  transition: opacity 0.15s var(--ease);
-  color: rgba(0, 0, 0, 0.55);
+  transition: opacity 0.1s, background 0.1s, color 0.1s;
+  cursor: pointer;
+  flex-shrink: 0;
 }
-
-.traffic-lights:hover .traffic-icon {
+.tab-item:hover .tab-close-btn,
+.tab-item.active .tab-close-btn {
   opacity: 1;
 }
-
-.traffic-red {
-  background: #ff5f57;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-.traffic-red:hover {
-  background: #ff3b30;
+.tab-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
 }
 
-.traffic-yellow {
-  background: #febc2e;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+.tab-new-btn {
+  width: 28px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
 }
-.traffic-yellow:hover {
-  background: #f5a623;
-}
-
-.traffic-green {
-  background: #28c840;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-.traffic-green:hover {
-  background: #1db938;
-}
-
-/* Unfocused state — all grey */
-.titlebar:not(:hover) .traffic-btn:not(:hover) {
-  /* keep colored even when not hovered */
-}
-
-.traffic-btn:active {
-  filter: brightness(0.85);
-  transform: scale(0.92);
+.tab-new-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
 }

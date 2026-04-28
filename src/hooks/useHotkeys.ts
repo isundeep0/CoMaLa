@@ -29,7 +29,7 @@ export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSide
       if (k === "s" && !e.shiftKey) {
         e.preventDefault();
         manualSave();
-      } else if (k === "n") {
+      } else if (k === "n" && !e.shiftKey) {
         e.preventDefault();
         onNewNote();
       } else if (k === "o") {
@@ -56,6 +56,11 @@ export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSide
       } else if (e.shiftKey && k === "b") {
         e.preventDefault();
         useEditorStore.getState().setViewMode("split");
+      } else if (k === "w" && !e.shiftKey) {
+        e.preventDefault();
+        // Close active tab
+        const { activeTabId, closeTab } = useEditorStore.getState();
+        if (activeTabId) closeTab(activeTabId);
       }
     };
     window.addEventListener("keydown", handler);

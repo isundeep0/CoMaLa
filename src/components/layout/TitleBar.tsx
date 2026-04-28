@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
-const appWindow = getCurrentWindow();
-
 export default function TitleBar() {
   const [maximized, setMaximized] = useState(false);
 
-  const handleMinimize = () => appWindow.minimize();
-  const handleToggleMaximize = async () => {
-    await appWindow.toggleMaximize();
-    setMaximized(await appWindow.isMaximized());
+  const handleMinimize = () => {
+    getCurrentWindow().minimize();
   };
-  const handleClose = () => appWindow.close();
+  const handleToggleMaximize = async () => {
+    const win = getCurrentWindow();
+    await win.toggleMaximize();
+    setMaximized(await win.isMaximized());
+  };
+  const handleClose = () => {
+    getCurrentWindow().destroy();
+  };
 
   return (
     <div
@@ -19,51 +22,49 @@ export default function TitleBar() {
       data-tauri-drag-region
     >
       {/* Left: App branding */}
-      <div className="flex items-center gap-2 pl-3 pointer-events-none" data-tauri-drag-region>
-        <div className="w-5 h-5 rounded-md bg-gradient-to-br from-[var(--accent)] to-[#5b4fcf] flex items-center justify-center shadow-[0_2px_8px_var(--accent-glow)]">
-          <span className="text-white text-[10px] font-bold leading-none">C</span>
+      <div className="flex items-center gap-2 pl-3" data-tauri-drag-region>
+        <div className="w-4 h-4 rounded-md bg-gradient-to-br from-[var(--accent)] to-[#5b4fcf] flex items-center justify-center shadow-[0_2px_8px_var(--accent-glow)]">
+          <span className="text-white text-[9px] font-bold leading-none">C</span>
         </div>
-        <span className="text-[11px] font-semibold tracking-wide text-[var(--text-muted)]" data-tauri-drag-region>
+        <span className="text-[10px] font-semibold tracking-wide text-[var(--text-muted)]" data-tauri-drag-region>
           COMALA
-        </span>
-        <span className="text-[9px] text-[var(--text-dim)] hidden sm:inline" data-tauri-drag-region>
-          Code · Markdown · LaTeX
         </span>
       </div>
 
-      {/* Right: macOS-style traffic light buttons */}
-      <div className="flex items-center gap-2 pr-3 traffic-lights">
+      {/* Right: window control buttons */}
+      <div className="flex items-center traffic-lights" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
         <button
           onClick={handleMinimize}
-          className="traffic-btn traffic-yellow"
+          className="window-btn window-btn-minimize"
           title="Minimize"
         >
-          <svg width="6" height="1" viewBox="0 0 6 1" className="traffic-icon">
-            <rect width="6" height="1" rx="0.5" fill="currentColor" />
+          <svg width="10" height="1" viewBox="0 0 10 1">
+            <rect width="10" height="1" rx="0.5" fill="currentColor" />
           </svg>
         </button>
         <button
           onClick={handleToggleMaximize}
-          className="traffic-btn traffic-green"
+          className="window-btn window-btn-maximize"
           title={maximized ? "Restore" : "Maximize"}
         >
           {maximized ? (
-            <svg width="6" height="6" viewBox="0 0 6 6" className="traffic-icon">
-              <path d="M1.5 0.5L4.5 3.5M4.5 0.5L1.5 3.5" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" />
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <rect x="2" y="0" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1" fill="none" />
+              <rect x="0" y="2" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1" fill="var(--bg)" />
             </svg>
           ) : (
-            <svg width="6" height="6" viewBox="0 0 6 6" className="traffic-icon">
-              <path d="M0.5 3.5L3 0.5L5.5 3.5M0.5 5.5L3 2.5L5.5 5.5" stroke="currentColor" strokeWidth="0.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <rect x="0.5" y="0.5" width="9" height="9" rx="1" stroke="currentColor" strokeWidth="1" fill="none" />
             </svg>
           )}
         </button>
         <button
           onClick={handleClose}
-          className="traffic-btn traffic-red"
+          className="window-btn window-btn-close"
           title="Close"
         >
-          <svg width="6" height="6" viewBox="0 0 6 6" className="traffic-icon">
-            <path d="M0.5 0.5L5.5 5.5M5.5 0.5L0.5 5.5" stroke="currentColor" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <svg width="10" height="10" viewBox="0 0 10 10">
+            <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
           </svg>
         </button>
       </div>
