@@ -26,8 +26,11 @@ import {
   Smile,
   Undo2,
   Redo2,
+  ImagePlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { openImageFile, copyImageToVault } from "@/lib/vault";
+import { useVaultStore } from "@/store/useVaultStore";
 
 import { undo, redo } from "@codemirror/commands";
 
@@ -107,6 +110,8 @@ const Btn = ({
 const Sep = () => <span className="w-px h-5 bg-white/8 mx-1" />;
 
 export default function Toolbar({ view }: Props) {
+  const vaultPath = useVaultStore((s) => s.vaultPath);
+
   const insertTable = () => {
     insertBlock(
       view,
@@ -130,6 +135,31 @@ export default function Toolbar({ view }: Props) {
   };
   const insertEmoji = () => {
     dispatch(view, () => ({ text: "😀", cursorOffset: 2 }));
+  };
+
+  const handleInsertImage = async () => {
+    const imagePath = await openImageFile();
+    if (!imagePath) return;
+    if (vaultPath) {
+      try {
+        const relativePath = await copyImageToVault(imagePath, vaultPath);
+        dispatch(view, (sel) => {
+          const alt = sel || "image";
+          return { text: `![${alt}](${relativePath})`, cursorOffset: 2 + alt.length };
+        });
+      } catch {
+        // Fallback to absolute path
+        dispatch(view, (sel) => {
+          const alt = sel || "image";
+          return { text: `![${alt}](${imagePath})`, cursorOffset: 2 + alt.length };
+        });
+      }
+    } else {
+      dispatch(view, (sel) => {
+        const alt = sel || "image";
+        return { text: `![${alt}](${imagePath})`, cursorOffset: 2 + alt.length };
+      });
+    }
   };
 
   return (
@@ -177,8 +207,11 @@ export default function Toolbar({ view }: Props) {
       <Btn title="Link (Ctrl+K)" onClick={() => wrap(view, "[", "](url)", "link text")}>
         <LinkIcon size={14} />
       </Btn>
-      <Btn title="Image" onClick={() => wrap(view, "![", "](image-url)", "alt")}>
+      <Btn title="Image (markdown syntax)" onClick={() => wrap(view, "![", "](image-url)", "alt")}>
         <ImageIcon size={14} />
+      </Btn>
+      <Btn title="Insert image from file" onClick={handleInsertImage}>
+        <ImagePlus size={14} />
       </Btn>
       <Btn title="Footnote" onClick={insertFootnote}>
         <Footprints size={14} />

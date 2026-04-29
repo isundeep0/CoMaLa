@@ -11,10 +11,12 @@ import {
   Search,
   FilePlus,
   HelpCircle,
+  PenTool,
 } from "lucide-react";
 import Sidebar, { type SidebarHandle } from "@/components/sidebar/Sidebar";
 import EditorPane from "@/components/editor/EditorPane";
 import PreviewPane from "@/components/preview/PreviewPane";
+import DrawingCanvas from "@/components/editor/DrawingCanvas";
 import Toolbar from "@/components/editor/Toolbar";
 import TabBar from "@/components/editor/TabBar";
 import StatusBar from "@/components/layout/StatusBar";
@@ -160,8 +162,9 @@ export default function AppShell() {
     );
   }
 
-  const showEditor = viewMode !== "preview";
-  const showPreview = viewMode !== "editor";
+  const showEditor = viewMode === "editor" || viewMode === "split";
+  const showPreview = viewMode === "preview" || viewMode === "split";
+  const showDraw = viewMode === "draw";
   const splitRatio = settings.editorPaneRatio;
 
   return (
@@ -256,6 +259,13 @@ export default function AppShell() {
             >
               <Eye size={13} />
             </button>
+            <button
+              onClick={() => setViewMode("draw")}
+              className={cn("glass-btn glass-btn-icon", viewMode === "draw" && "active")}
+              title="Drawing canvas"
+            >
+              <PenTool size={13} />
+            </button>
             <span className="w-px h-5 bg-white/8 mx-1" />
             <button
               onClick={() => setHelpOpen(true)}
@@ -271,11 +281,15 @@ export default function AppShell() {
         {showEditor && <Toolbar view={editorViewRef.current} />}
 
         {/* Tab bar */}
-        <TabBar />
+        {!showDraw && <TabBar />}
 
         {/* Editor + Preview */}
         <div className="flex-1 flex overflow-hidden min-h-0">
-          {!activeNoteId ? (
+          {showDraw ? (
+            <div className="flex-1 h-full overflow-hidden">
+              <DrawingCanvas />
+            </div>
+          ) : !activeNoteId ? (
             <div className="flex-1 flex items-center justify-center text-[var(--text-muted)] animate-fade-in">
               <div className="text-center space-y-4">
                 <div className="text-[14px] mb-1">No note open</div>

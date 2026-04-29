@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ViewMode = "editor" | "split" | "preview";
+export type ViewMode = "editor" | "split" | "preview" | "draw";
 
 export interface Tab {
   id: string;
@@ -34,6 +34,55 @@ function flatFromTab(tab: Tab | undefined) {
 
 let untitledCounter = 0;
 
+// --- Draft persistence for unsaved tabs ---
+const DRAFTS_KEY = "comala.drafts.v1";
+
+interface DraftTab {
+  id: string;
+  name: string;
+  content: string;
+}
+
+function persistDrafts(tabs: Tab[]) {
+  try {
+    const drafts: DraftTab[] = tabs
+      .filter((t) => t.path === null && t.content !== "")
+      .map((t) => ({ id: t.id, name: t.name, content: t.content }));
+    localStorage.setItem(DRAFTS_KEY, JSON.stringify(drafts));
+  } catch {}
+}
+
+function loadDrafts(): Tab[] {
+  try {
+    const raw = localStorage.getItem(DRAFTS_KEY);
+    if (!raw) return [];
+    const drafts: DraftTab[] = JSON.parse(raw);
+    return drafts.map((d) => ({
+      id: d.id,
+      name: d.name,
+      path: null,
+      content: d.content,
+      savedContent: "",
+      saveStatus: "dirty" as const,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// Restore drafts on startup
+const restoredDrafts = loadDrafts();
+if (restoredDrafts.length > 0) {
+  // Set untitledCounter to avoid id collisions
+  for (const d of restoredDrafts) {
+    const match = d.name.match(/^Untitled (\d+)$/);
+    if (match) {
+      const n = parseInt(match[1], 10);
+      if (n >= untitledCounter) untitledCounter = n;
+    }
+  }
+}
+
 interface EditorState {
   // Multi-tab
   tabs: Tab[];
@@ -56,6 +105,8 @@ interface EditorState {
   openNote: (id: string, path: string, name: string, content: string) => void;
   closeTab: (tabId: string) => void;
   setActiveTab: (tabId: string) => void;
+  nextTab: () => void;
+  prevTab: () => void;
 
   // Content (operates on active tab)
   setContent: (c: string) => void;
@@ -69,16 +120,18 @@ interface EditorState {
 }
 
 export const useEditorStore = create<EditorState>((set, get) => ({
-  tabs: [],
-  activeTabId: null,
+  tabs: restoredDrafts,
+  activeTabId: restoredDrafts.length > 0 ? restoredDrafts[0].id : null,
 
-  activeNoteId: null,
-  activePath: null,
-  activeName: "",
-  content: "",
-  savedContent: "",
+  ...(restoredDrafts.length > 0 ? flatFromTab(restoredDrafts[0]) : {
+    activeNoteId: null,
+    activePath: null,
+    activeName: "",
+    content: "",
+    savedContent: "",
+    saveStatus: "idle" as const,
+  }),
   viewMode: "split",
-  saveStatus: "idle",
   cursor: { line: 1, col: 1 },
 
   newTab: () => {
@@ -99,8 +152,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
           ? { ...t, content: s.content, savedContent: s.savedContent, saveStatus: s.saveStatus }
           : t,
       );
+      const newTabs = [...tabs, tab];
+      persistDrafts(newTabs);
       return {
-        tabs: [...tabs, tab],
+        tabs: newTabs,
         activeTabId: id,
         ...flatFromTab(tab),
         cursor: { line: 1, col: 1 },
@@ -147,6 +202,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         }
       }
       const activeTab = tabs.find((t) => t.id === nextActiveId);
+      persistDrafts(tabs);
       return { tabs, activeTabId: nextActiveId, ...flatFromTab(activeTab) };
     });
   },
@@ -168,10 +224,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   setContent: (c) => {
     set((s) => {
-      const status = c === s.savedContent ? (s.activePath ? "saved" : (c === "" ? "idle" : "dirty")) : "dirty";
+      const status: Tab["saveStatus"] = c === s.savedContent ? (s.activePath ? "saved" : (c === "" ? "idle" : "dirty")) : "dirty";
       const tabs = s.tabs.map((t) =>
         t.id === s.activeTabId ? { ...t, content: c, saveStatus: status } : t,
       );
+      persistDrafts(tabs);
       return { content: c, saveStatus: status, tabs } as Partial<EditorState>;
     });
   },
@@ -197,6 +254,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
           ...(newName !== undefined ? { name: newName } : {}),
         };
       });
+      persistDrafts(tabs);
       return {
         saveStatus: "saved",
         savedContent: s.content,
@@ -209,6 +267,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   setViewMode: (m) => set({ viewMode: m }),
   setCursor: (line, col) => set({ cursor: { line, col } }),
+
+  nextTab: () => {
+    const { tabs, activeTabId } = get();
+    if (tabs.length <= 1) return;
+    const idx = tabs.findIndex((t) => t.id === activeTabId);
+    const nextIdx = (idx + 1) % tabs.length;
+    get().setActiveTab(tabs[nextIdx].id);
+  },
+
+  prevTab: () => {
+    const { tabs, activeTabId } = get();
+    if (tabs.length <= 1) return;
+    const idx = tabs.findIndex((t) => t.id === activeTabId);
+    const prevIdx = (idx - 1 + tabs.length) % tabs.length;
+    get().setActiveTab(tabs[prevIdx].id);
+  },
 
   closeNote: () => {
     const { activeTabId, closeTab } = get();

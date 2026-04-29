@@ -284,4 +284,28 @@ export async function saveAsDialog(defaultName = "untitled.md"): Promise<string 
   return path;
 }
 
+export async function openImageFile(): Promise<string | null> {
+  const path = await open({
+    multiple: false,
+    title: "Insert Image",
+    filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp"] }],
+  });
+  return typeof path === "string" ? path : null;
+}
+
+export async function copyImageToVault(
+  imagePath: string,
+  vaultPath: string,
+): Promise<string> {
+  const assetsDir = joinPath(vaultPath, "assets");
+  if (!(await exists(assetsDir))) await mkdir(assetsDir, { recursive: true });
+  const name = basename(imagePath);
+  const targetPath = joinPath(assetsDir, name);
+  // Read binary and write to assets folder
+  const { readFile, writeFile } = await import("@tauri-apps/plugin-fs");
+  const data = await readFile(imagePath);
+  await writeFile(targetPath, data);
+  return `assets/${name}`;
+}
+
 export { BaseDirectory };

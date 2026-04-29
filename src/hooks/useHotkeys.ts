@@ -24,6 +24,19 @@ export function useHotkeys({ onNewNote, onOpenFile, onOpenSettings, onToggleSide
 
       const ctrl = e.ctrlKey || e.metaKey;
       if (!ctrl) return;
+
+      // Tab switching: Ctrl+Tab / Ctrl+Shift+Tab
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const { nextTab, prevTab } = useEditorStore.getState();
+        if (e.shiftKey) {
+          prevTab();
+        } else {
+          nextTab();
+        }
+        return;
+      }
+
       const k = e.key.toLowerCase();
 
       if (k === "s" && !e.shiftKey) {
