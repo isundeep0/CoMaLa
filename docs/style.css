@@ -1,0 +1,488 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    --secondary: #64748b;
+    --bg-light: #f8fafc;
+    --bg-dark: #1e293b;
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Navbar */
+.navbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+/* Hero */
+.hero {
+    padding: 6rem 0;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.platform-note {
+    margin-top: 1.5rem;
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: white;
+    color: var(--primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Features */
+.features {
+    padding: 5rem 0;
+    background: var(--bg-light);
+}
+
+.features h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-weight: 700;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: var(--text-light);
+}
+
+/* Download */
+.download {
+    padding: 5rem 0;
+}
+
+.download h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.download-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+}
+
+.download-hero {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.download-main {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+}
+
+.platform-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.download-main h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.download-main p {
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.btn-download-large {
+    background: white;
+    color: var(--primary);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 700;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.btn-download-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.download-info {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.installation-steps {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.installation-steps h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.installation-steps ol {
+    margin-left: 1.5rem;
+    color: var(--text-light);
+}
+
+.installation-steps li {
+    margin-bottom: 0.5rem;
+}
+
+.installation-steps code {
+    background: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.release-note {
+    text-align: center;
+    color: var(--text-light);
+    margin-top: 2rem;
+}
+
+.release-note a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.release-note a:hover {
+    text-decoration: underline;
+}
+
+.platform-future {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.platform-future p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* Keyboard Shortcuts */
+.keyboard-shortcuts {
+    padding: 4rem 0;
+    background: var(--bg-light);
+}
+
+.keyboard-shortcuts h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.shortcut-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+}
+
+kbd {
+    background: var(--bg-dark);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.shortcut-item span {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* Tech Stack */
+.tech-stack {
+    padding: 4rem 0;
+}
+
+.tech-stack h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.tech-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.tech-tag {
+    background: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: all 0.2s;
+}
+
+.tech-tag:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Footer */
+footer {
+    background: var(--bg-dark);
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+footer a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .download-main {
+        padding: 2rem;
+    }
+    
+    .platform-icon {
+        font-size: 3rem;
+    }
+    
+    .features h2,
+    .download h2,
+    .tech-stack h2,
+    .keyboard-shortcuts h2 {
+        font-size: 2rem;
+    }
+    
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .shortcuts-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .hero {
+        padding: 4rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
