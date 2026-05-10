@@ -1,6 +1,27 @@
+<div align="center">
+
 # COMALA — Code · Markdown · LaTeX
 
-A fast, offline-first desktop markdown editor with live preview, vault-based note organization, and multi-format export. Built with Tauri 2, React 19, and CodeMirror 6.
+**A fast, offline-first desktop Markdown editor with live preview, vault-based note organization, and multi-format export.**
+
+<br/>
+
+[![Tauri](https://img.shields.io/badge/Tauri_2-FFC131?style=for-the-badge&logo=tauri&logoColor=black)](https://tauri.app)
+[![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/isundeep0/CoMaLa/releases)
+
+[![Binary Size](https://img.shields.io/badge/Binary_Size-~5_MB-22c55e?style=flat-square)](https://github.com/isundeep0/CoMaLa/releases)
+[![No Electron](https://img.shields.io/badge/No_Electron-✓-6366f1?style=flat-square)](https://tauri.app)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/isundeep0/CoMaLa?style=flat-square&color=f59e0b)](https://github.com/isundeep0/CoMaLa/stargazers)
+
+</div>
+
+---
+
+> Built with **Tauri 2 (Rust)** and **React 19** — achieving a ~5 MB binary with native performance and **zero Electron overhead** compared to alternatives like VS Code or Obsidian.
 
 ## Features
 
@@ -43,7 +64,7 @@ A fast, offline-first desktop markdown editor with live preview, vault-based not
 
 ```bash
 # Clone the repo
-git clone https://github.com/<your-username>/Comala.git
+git clone https://github.com/isundeep0/CoMaLa.git
 cd Comala
 
 # Install frontend dependencies
