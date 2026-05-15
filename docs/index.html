@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COMALA - Offline Markdown Editor</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        const THEME_KEY = "comala-theme";
+
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            if (savedTheme) {
+                return savedTheme;
+            }
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(THEME_KEY, theme);
+
+            const themeIcon = document.getElementById('theme-icon');
+            if (themeIcon) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        // Set the theme initially before the body loads
+        const initialTheme = getInitialTheme();
+        document.documentElement.setAttribute('data-theme', initialTheme);
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -14,9 +45,16 @@
                 <a href="#features">Features</a>
                 <a href="#download">Download</a>
                 <a href="https://github.com/isundeep0/Comala" target="_blank">GitHub</a>
+                <button onclick="toggleTheme()" id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 1rem; padding: 0;">
+                    <span id="theme-icon"></span>
+                </button>
             </div>
         </div>
     </nav>
+    <script>
+        // Set the icon appropriately on load
+        setTheme(document.documentElement.getAttribute('data-theme'));
+    </script>
 
     <section class="hero">
         <div class="container">

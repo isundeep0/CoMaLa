@@ -15,12 +15,43 @@
     --text-light: #64748b;
     --border: #e2e8f0;
     --success: #10b981;
+
+    --bg-main: var(--bg-light);
+    --text-main: var(--text-dark);
+    --card-bg: white;
+    --navbar-bg: rgba(255, 255, 255, 0.95);
+    --shortcut-bg: var(--bg-dark);
+    --shortcut-text: white;
+    --tech-tag-bg: white;
+    --tech-tag-border: var(--border);
+}
+
+[data-theme="dark"] {
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-light: #93c5fd;
+    --secondary: #94a3b8;
+    --bg-light: #1e293b;
+    --bg-dark: #0f172a;
+    --text-dark: #f8fafc;
+    --text-light: #cbd5e1;
+    --border: #334155;
+
+    --bg-main: #0f172a;
+    --text-main: #f8fafc;
+    --card-bg: #1e293b;
+    --navbar-bg: rgba(15, 23, 42, 0.95);
+    --shortcut-bg: #334155;
+    --shortcut-text: #f8fafc;
+    --tech-tag-bg: #1e293b;
+    --tech-tag-border: #334155;
 }
 
 body {
+    background-color: var(--bg-main);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
-    color: var(--text-dark);
+    color: var(--text-main);
 }
 
 .container {
@@ -31,14 +62,13 @@ body {
 
 /* Navbar */
 .navbar {
-    background: white;
+    background: var(--navbar-bg);
     border-bottom: 1px solid var(--border);
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.95);
 }
 
 .navbar .container {
@@ -61,7 +91,7 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-dark);
+    color: var(--text-main);
     font-weight: 500;
     transition: color 0.2s;
 }
@@ -138,7 +168,7 @@ body {
 /* Features */
 .features {
     padding: 5rem 0;
-    background: var(--bg-light);
+    background: var(--bg-main);
 }
 
 .features h2 {
@@ -155,7 +185,7 @@ body {
 }
 
 .feature-card {
-    background: white;
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 12px;
     border: 1px solid var(--border);
@@ -175,7 +205,7 @@ body {
 .feature-card h3 {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text-main);
     font-weight: 600;
 }
 
@@ -258,17 +288,18 @@ body {
 }
 
 .installation-steps {
-    background: var(--bg-light);
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 12px;
     max-width: 600px;
     margin: 0 auto 2rem;
+    border: 1px solid var(--border);
 }
 
 .installation-steps h3 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: var(--text-dark);
+    color: var(--text-main);
 }
 
 .installation-steps ol {
@@ -281,7 +312,7 @@ body {
 }
 
 .installation-steps code {
-    background: white;
+    background: var(--bg-main);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     border: 1px solid var(--border);
@@ -308,8 +339,9 @@ body {
     text-align: center;
     margin-top: 2rem;
     padding: 1rem;
-    background: var(--bg-light);
+    background: var(--card-bg);
     border-radius: 8px;
+    border: 1px solid var(--border);
 }
 
 .platform-future p {
@@ -320,7 +352,7 @@ body {
 /* Keyboard Shortcuts */
 .keyboard-shortcuts {
     padding: 4rem 0;
-    background: var(--bg-light);
+    background: var(--bg-main);
 }
 
 .keyboard-shortcuts h2 {
@@ -339,7 +371,7 @@ body {
 }
 
 .shortcut-item {
-    background: white;
+    background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--border);
@@ -351,8 +383,8 @@ body {
 }
 
 kbd {
-    background: var(--bg-dark);
-    color: white;
+    background: var(--shortcut-bg);
+    color: var(--shortcut-text);
     padding: 0.3rem 0.6rem;
     border-radius: 4px;
     font-family: 'Courier New', monospace;
@@ -386,12 +418,12 @@ kbd {
 }
 
 .tech-tag {
-    background: white;
+    background: var(--tech-tag-bg);
     padding: 0.5rem 1.25rem;
     border-radius: 20px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--tech-tag-border);
     font-weight: 500;
-    color: var(--text-dark);
+    color: var(--text-main);
     transition: all 0.2s;
 }
 
